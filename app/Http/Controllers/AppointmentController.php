@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Auth;
 class AppointmentController extends Controller
 {
     public function index()
-{
-$appointments = Appointment::where('user_id', auth::id())->get();
-
-    return view('appointments.index', compact('appointments'));
-}
+    {
+        $appointments = Appointment::where('user_id', Auth::id())->get();
+        return view('appointments.index', compact('appointments'));
+    }
+    
 
 
     public function create()
