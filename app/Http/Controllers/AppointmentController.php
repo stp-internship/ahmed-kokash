@@ -5,35 +5,37 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Services\AppointmentService;
 
 class AppointmentController extends Controller
 {
+    protected AppointmentService $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
+
     public function index()
     {
-        $appointments = Appointment::where('user_id', Auth::id())->get();
+        $appointments = $this->appointmentService->getUserAppointments(Auth::id());
         return view('appointments.index', compact('appointments'));
     }
-    
-
 
     public function create()
     {
         return view('appointments.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'appointment_time' => 'required|date|after:now',
-        ]);
-
-        Appointment::create([
+        $this->appointmentService->createAppointment([
             'title' => $request->title,
             'description' => $request->description,
             'appointment_time' => $request->appointment_time,
             'user_id' => Auth::id(),
+
         ]);
 
         return redirect()->route('appointments.index');
@@ -59,7 +61,7 @@ class AppointmentController extends Controller
             'appointment_time' => 'required|date|after:now',
         ]);
 
-        $appointment->update([
+        $this->appointmentService->updateAppointment($appointment, [
             'title' => $request->title,
             'description' => $request->description,
             'appointment_time' => $request->appointment_time,
@@ -74,7 +76,7 @@ class AppointmentController extends Controller
             return redirect()->route('appointments.index');
         }
 
-        $appointment->delete();
+        $this->appointmentService->deleteAppointment($appointment);
         return redirect()->route('appointments.index');
     }
 }
