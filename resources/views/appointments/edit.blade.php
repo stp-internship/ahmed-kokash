@@ -8,7 +8,6 @@
         @csrf
         @method('PUT')
 
-        {{-- العنوان --}}
         <div class="mb-4">
             <label for="title" class="block text-sm font-medium text-gray-700">عنوان الموعد</label>
             <input type="text" name="title" id="title" value="{{ old('title', $appointment->title) }}"
@@ -18,7 +17,6 @@
             @enderror
         </div>
 
-        {{-- الوصف --}}
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-gray-700">الوصف</label>
             <textarea name="description" id="description" rows="3"
@@ -28,7 +26,6 @@
             @enderror
         </div>
 
-        {{-- وقت الموعد --}}
         <div class="mb-4">
             <label for="appointment_time" class="block text-sm font-medium text-gray-700">وقت الموعد</label>
             <input type="datetime-local" name="appointment_time" id="appointment_time"
@@ -40,7 +37,6 @@
             @enderror
         </div>
 
-        {{-- الأزرار --}}
         <div class="mt-6 flex justify-between items-center">
             <a href="{{ route('appointments.index') }}" class="text-gray-600 hover:underline">رجوع</a>
             <button type="submit"
