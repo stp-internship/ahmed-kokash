@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Services\AppointmentService;
+use App\Http\Requests\UpdateAppointmentRequest;
+
+
 
 class AppointmentController extends Controller
 {
@@ -38,7 +41,7 @@ class AppointmentController extends Controller
 
         ]);
 
-        return redirect()->route('appointments.index');
+        return redirect()->route('appointments.index')->with('success', 'تم حفظ الموعد بنجاح');
     }
 
     public function edit(Appointment $appointment)
@@ -50,16 +53,11 @@ class AppointmentController extends Controller
         return view('appointments.edit', compact('appointment'));
     }
 
-    public function update(Request $request, Appointment $appointment)
+    public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
         if ($appointment->user_id !== Auth::id()) {
             return redirect()->route('appointments.index');
         }
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'appointment_time' => 'required|date|after:now',
-        ]);
 
         $this->appointmentService->updateAppointment($appointment, [
             'title' => $request->title,
@@ -69,6 +67,7 @@ class AppointmentController extends Controller
 
         return redirect()->route('appointments.index');
     }
+
 
     public function destroy(Appointment $appointment)
     {

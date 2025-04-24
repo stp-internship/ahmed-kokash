@@ -25,4 +25,8 @@ class AppointmentService
     {
         return Appointment::where('user_id', $userId)->get();
     }
+
 }
+
+
+

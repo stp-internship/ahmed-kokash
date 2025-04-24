@@ -24,3 +24,6 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth'])->group(function () {
     Route::resource('appointments', AppointmentController::class);
 });
+
+
+
