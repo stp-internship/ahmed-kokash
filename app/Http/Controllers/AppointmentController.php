@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Services\AppointmentService;
 use App\Http\Requests\UpdateAppointmentRequest;
-
-
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class AppointmentController extends Controller
 {
+    use AuthorizesRequests;
+
     protected AppointmentService $appointmentService;
 
     public function __construct(AppointmentService $appointmentService)
@@ -38,7 +38,6 @@ class AppointmentController extends Controller
             'description' => $request->description,
             'appointment_time' => $request->appointment_time,
             'user_id' => Auth::id(),
-
         ]);
 
         return redirect()->route('appointments.index')->with('success', 'تم حفظ الموعد بنجاح');
@@ -46,18 +45,15 @@ class AppointmentController extends Controller
 
     public function edit(Appointment $appointment)
     {
-        if ($appointment->user_id !== Auth::id()) {
-            return redirect()->route('appointments.index');
-        }
+        $this->authorize('update', $appointment);
 
         return view('appointments.edit', compact('appointment'));
     }
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        if ($appointment->user_id !== Auth::id()) {
-            return redirect()->route('appointments.index');
-        }
+
+    $this->authorize('update', $appointment);
 
         $this->appointmentService->updateAppointment($appointment, [
             'title' => $request->title,
@@ -68,14 +64,13 @@ class AppointmentController extends Controller
         return redirect()->route('appointments.index');
     }
 
-
     public function destroy(Appointment $appointment)
     {
-        if ($appointment->user_id !== Auth::id()) {
-            return redirect()->route('appointments.index');
-        }
+        
+        $this->authorize('delete', $appointment);
 
         $this->appointmentService->deleteAppointment($appointment);
         return redirect()->route('appointments.index');
     }
+
 }

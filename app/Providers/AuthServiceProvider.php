@@ -14,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Appointment::class => AppointmentPolicy::class, 
+        Appointment::class => AppointmentPolicy::class,
     ];
 
     /**
@@ -24,6 +24,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
+        $this->registerPolicies();  
     }
 }
