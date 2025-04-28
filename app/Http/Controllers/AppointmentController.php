@@ -9,6 +9,8 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Services\AppointmentService;
 use App\Http\Requests\UpdateAppointmentRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Exports\AppointmentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 class AppointmentController extends Controller
 {
     use AuthorizesRequests;
@@ -30,6 +32,16 @@ class AppointmentController extends Controller
     {
         return view('appointments.create');
     }
+
+
+    public function show(Appointment $appointment)
+{
+    if ($appointment->user_id !== Auth::id()) {
+        return redirect()->route('appointments.index');
+    }
+
+    return view('appointments.show', compact('appointment'));
+}
 
     public function store(StoreAppointmentRequest $request)
     {
@@ -66,11 +78,16 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
-        
+
         $this->authorize('delete', $appointment);
 
         $this->appointmentService->deleteAppointment($appointment);
         return redirect()->route('appointments.index');
     }
+
+    // public function export()
+    // {
+    //     return Excel::download(new AppointmentsExport, 'appointments.xlsx');
+    // }
 
 }

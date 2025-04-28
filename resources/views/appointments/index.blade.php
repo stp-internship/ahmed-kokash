@@ -1,47 +1,65 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto mt-10 bg-white p-6 shadow rounded">
-    <h1 class="text-2xl font-bold mb-4">مواعيدي</h1>
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 shadow-lg rounded-lg">
+    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">مواعيدي</h1>
 
     @if($appointments->isEmpty())
-        <p class="text-gray-500">لا توجد مواعيد بعد.</p>
+        <p class="text-gray-500 text-center">لا توجد مواعيد بعد.</p>
     @else
         <ul>
             @foreach ($appointments as $appointment)
                 @php
                     $isPast = \Carbon\Carbon::parse($appointment->appointment_time)->isPast();
                 @endphp
-                <li class="border-b py-4 px-2 flex justify-between items-center 
-                    {{ $isPast ? 'bg-gray-100 text-gray-500' : 'bg-white' }}">
-                    
-                    <div>
-                        <h2 class="font-semibold text-lg">{{ $appointment->title }}</h2>
-                        <p class="text-sm">{{ $appointment->appointment_time }}</p>
+                <li class="border-b py-6 px-4 flex justify-between items-center
+                    {{ $isPast ? 'bg-gray-100 text-gray-500' : 'bg-white shadow-md' }} rounded-lg mb-4">
+
+                    <div class="w-3/4">
+                        <h2 class="font-semibold text-xl text-gray-800">{{ $appointment->title }}</h2>
+                        <p class="text-sm text-gray-600">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('d M Y H:i') }}</p>
                         @if($appointment->description)
-                            <p class="text-sm text-gray-600 mt-1">{{ $appointment->description }}</p>
+                            <p class="text-sm text-gray-600 mt-2">{{ $appointment->description }}</p>
+                        @else
+                            <p class="text-sm text-gray-400 mt-2">لا يوجد وصف للموعد</p>
                         @endif
                     </div>
 
-                    @if (!$isPast)
-                    <div class="flex gap-2">
-                        <a href="{{ route('appointments.edit', $appointment) }}" class="text-blue-600 hover:underline">تعديل</a>
-                        <form action="{{ route('appointments.destroy', $appointment) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">حذف</button>
-                        </form>
+                    <div class="flex flex-col items-end space-y-2">
+                        @if (!$isPast)
+                            <div class="flex gap-4">
+                                <a href="{{ route('appointments.edit', $appointment) }}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
+                                    تعديل
+                                </a>
+                                <form action="{{ route('appointments.destroy', $appointment) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200">
+                                        حذف
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                        <!-- رابط عرض التفاصيل -->
+                        <a href="{{ route('appointments.show', $appointment) }}" class="text-blue-600 hover:text-blue-700 text-sm mt-2">
+                            <i class="fas fa-info-circle"></i> عرض التفاصيل
+                        </a>
                     </div>
-                    @endif
                 </li>
             @endforeach
         </ul>
     @endif
 
-    <div class="mt-6 text-right">
-        <a href="{{ route('appointments.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-            إضافة موعد
+    <div class="mt-8 text-right">
+        <a href="{{ route('appointments.create') }}" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
+            إضافة موعد جديد
         </a>
+    </div>
+
+    <div class="mt-4 text-center">
+        {{-- <a href="{{ route('appointments.export') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
+            <i class="fas fa-download"></i> تصدير المواعيد إلى Excel
+        </a> --}}
     </div>
 </div>
 @endsection

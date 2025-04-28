@@ -26,4 +26,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
 
+
+// Route::get('/appointments/export', [AppointmentController::class, 'export'])->name('appointments.export');
