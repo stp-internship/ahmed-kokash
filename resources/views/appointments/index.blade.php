@@ -48,6 +48,10 @@
                 </li>
             @endforeach
         </ul>
+
+        <div class="mt-4">
+            {{ $appointments->links() }}
+        </div>
     @endif
 
     <div class="mt-8 text-right">
@@ -57,9 +61,9 @@
     </div>
 
     <div class="mt-4 text-center">
-        {{-- <a href="{{ route('appointments.export') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
-            <i class="fas fa-download"></i> تصدير المواعيد إلى Excel
-        </a> --}}
+         <a href="{{ route('appointments.export') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
+            <i class="fas fa-download"></i> تصدير المواعيد إلى Excelp
+        </a>
     </div>
 </div>
 @endsection

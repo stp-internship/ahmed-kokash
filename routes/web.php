@@ -20,13 +20,10 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-
 Route::middleware(['auth'])->group(function () {
     Route::resource('appointments', AppointmentController::class);
+    Route::get('/appointments-export', [AppointmentController::class, 'export'])->name('appointments.export');
+
+
 });
 
-
-Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
-
-
-// Route::get('/appointments/export', [AppointmentController::class, 'export'])->name('appointments.export');

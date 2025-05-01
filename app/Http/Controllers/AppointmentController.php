@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateAppointmentRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Exports\AppointmentsExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 class AppointmentController extends Controller
 {
     use AuthorizesRequests;
@@ -33,15 +34,14 @@ class AppointmentController extends Controller
         return view('appointments.create');
     }
 
-
     public function show(Appointment $appointment)
-{
-    if ($appointment->user_id !== Auth::id()) {
-        return redirect()->route('appointments.index');
-    }
+    {
+        if ($appointment->user_id !== Auth::id()) {
+            return redirect()->route('appointments.index');
+        }
 
-    return view('appointments.show', compact('appointment'));
-}
+        return view('appointments.show', compact('appointment'));
+    }
 
     public function store(StoreAppointmentRequest $request)
     {
@@ -64,8 +64,7 @@ class AppointmentController extends Controller
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-
-    $this->authorize('update', $appointment);
+        $this->authorize('update', $appointment);
 
         $this->appointmentService->updateAppointment($appointment, [
             'title' => $request->title,
@@ -78,16 +77,15 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
-
         $this->authorize('delete', $appointment);
 
-        $this->appointmentService->deleteAppointment($appointment);
-        return redirect()->route('appointments.index');
+        $appointment->delete();
+
+        return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
     }
 
-    // public function export()
-    // {
-    //     return Excel::download(new AppointmentsExport, 'appointments.xlsx');
-    // }
-
+    public function export()
+    {
+        return Excel::download(new AppointmentsExport, 'appointments.xlsx');
+    }
 }

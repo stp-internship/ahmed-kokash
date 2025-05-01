@@ -13,11 +13,13 @@ class Appointment extends Model
         'user_id'
     ];
 
-    protected $dates = ['appointment_time'];
-
+    protected $dates = [
+        'appointment_time',
+        'created_at',
+        'updated_at',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
 }

@@ -21,10 +21,13 @@ class AppointmentService
         return $appointment->delete();
     }
 
-    public function getUserAppointments(int $userId)
-    {
-        return Appointment::where('user_id', $userId)->get();
-    }
+    // في AppointmentService
+public function getUserAppointments(int $userId)
+{
+    return Appointment::where('user_id', $userId)->paginate(10);
+}
+
+
 
 }
 
