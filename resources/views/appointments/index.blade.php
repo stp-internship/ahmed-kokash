@@ -2,6 +2,31 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto mt-10 bg-white p-8 shadow-lg rounded-lg">
+
+
+    @if (session('success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)"
+            class="mb-6 p-4 bg-green-100 text-green-800 border border-green-300 rounded-md text-center transition-opacity duration-500"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
+
+
+    @if (session('info'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)"
+            class="mb-6 p-4 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-md text-center transition-opacity duration-500"
+        >
+            {{ session('info') }}
+        </div>
+    @endif
+
     <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">مواعيدي</h1>
 
     @if($appointments->isEmpty())
@@ -40,7 +65,6 @@
                                 </form>
                             </div>
                         @endif
-                        <!-- رابط عرض التفاصيل -->
                         <a href="{{ route('appointments.show', $appointment) }}" class="text-blue-600 hover:text-blue-700 text-sm mt-2">
                             <i class="fas fa-info-circle"></i> عرض التفاصيل
                         </a>
@@ -61,8 +85,8 @@
     </div>
 
     <div class="mt-4 text-center">
-         <a href="{{ route('appointments.export') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
-            <i class="fas fa-download"></i> تصدير المواعيد إلى Excelp
+        <a href="{{ route('appointments.export') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
+            <i class="fas fa-download"></i> تصدير المواعيد إلى Excel
         </a>
     </div>
 </div>

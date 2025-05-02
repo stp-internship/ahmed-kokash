@@ -13,23 +13,30 @@ class AppointmentService
 
     public function updateAppointment(Appointment $appointment, array $data): bool
     {
-        return $appointment->update($data);
+        $data['appointment_time'] = \Carbon\Carbon::parse($data['appointment_time'])->format('Y-m-d H:i:00');
+
+        $appointment->fill($data);
+
+        if (!$appointment->isDirty()) {
+            return false;
+        }
+
+        $appointment->save();
+
+        return true;
     }
+
+
+
+
 
     public function deleteAppointment(Appointment $appointment): bool
     {
         return $appointment->delete();
     }
 
-    // في AppointmentService
-public function getUserAppointments(int $userId)
-{
-    return Appointment::where('user_id', $userId)->paginate(10);
+    public function getUserAppointments(int $userId)
+    {
+        return Appointment::where('user_id', $userId)->paginate(10);
+    }
 }
-
-
-
-}
-
-
-

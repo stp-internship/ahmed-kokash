@@ -66,14 +66,21 @@ class AppointmentController extends Controller
     {
         $this->authorize('update', $appointment);
 
-        $this->appointmentService->updateAppointment($appointment, [
+        $updated = $this->appointmentService->updateAppointment($appointment, [
             'title' => $request->title,
             'description' => $request->description,
             'appointment_time' => $request->appointment_time,
         ]);
 
-        return redirect()->route('appointments.index');
+        if (!$updated) {
+            return redirect()->route('appointments.index')->with('info', 'لم يتم تعديل أي شيء، البيانات كما هي.');
+        }
+
+        return redirect()->route('appointments.index')->with('success', 'تم تعديل الموعد بنجاح');
     }
+
+
+
 
     public function destroy(Appointment $appointment)
     {
