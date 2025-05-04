@@ -39,4 +39,9 @@ class AppointmentService
     {
         return Appointment::where('user_id', $userId)->paginate(10);
     }
+
+    public function getUserAppointmentsQuery(int $userId)
+    {
+        return Appointment::with('user')->where('user_id', $userId);
+    }
 }

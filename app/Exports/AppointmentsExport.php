@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Appointment;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -15,10 +14,15 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class AppointmentsExport implements FromQuery, WithMapping, WithHeadings, WithChunkReading, ShouldAutoSize, WithStyles
 {
     use Exportable;
+    protected $query;
+    public function __construct($query)
+    {
+        $this->query = $query;
+    }
 
     public function query()
     {
-        return Appointment::with('user');
+        return $this->query;
     }
 
     public function styles(Worksheet $sheet)
@@ -51,7 +55,7 @@ class AppointmentsExport implements FromQuery, WithMapping, WithHeadings, WithCh
     {
         return [
             $appointment->id,
-            optional($appointment->user)->name ?? 'N/A',
+            $appointment->user?->name ?? 'N/A',
             $appointment->title,
             $appointment->description,
             date('Y-m-d H:i', strtotime($appointment->appointment_time)),

@@ -11,6 +11,9 @@ use App\Http\Requests\UpdateAppointmentRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Exports\AppointmentsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class AppointmentController extends Controller
 {
@@ -36,9 +39,8 @@ class AppointmentController extends Controller
 
     public function show(Appointment $appointment)
     {
-        if ($appointment->user_id !== Auth::id()) {
-            return redirect()->route('appointments.index');
-        }
+        $this->authorize('view', $appointment);
+
 
         return view('appointments.show', compact('appointment'));
     }
@@ -91,8 +93,31 @@ class AppointmentController extends Controller
         return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
     }
 
+    //     public function export()
+    // {
+    //     $query = $this->appointmentService->getUserAppointmentsQuery(Auth::id());
+    //     // $export = new AppointmentsExport($appointments);
+    //     $export = new AppointmentsExport($query);
+    //     return Excel::download($export, 'appointments_' . now()->format('Y_m_d_H_i_s') . '.xlsx');
+    // }
+
+
     public function export()
     {
-        return Excel::download(new AppointmentsExport, 'appointments.xlsx');
+        try {
+            DB::beginTransaction();
+            $query = $this->appointmentService->getUserAppointmentsQuery(Auth::id());
+            $export = new AppointmentsExport($query);
+            // return Excel::download($export, 'appointments_' . now() . '.xlsx');
+            $fileName = 'appointments_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+            $result = Excel::download($export, $fileName);
+            DB::commit();
+
+            return $result;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error exporting appointments: ' . $e->getMessage());
+            return redirect()->route('appointments.index')->with('error', 'فشل في تصدير المواعيد.');
+        }
     }
 }
