@@ -8,7 +8,7 @@ class UpdateAppointmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // اسمح للجميع (أو تحقق من الصلاحيات هنا إذا تحب)
+        return true;
     }
 
     public function rules(): array
@@ -17,6 +17,7 @@ class UpdateAppointmentRequest extends FormRequest
             'title' => 'required|string|max:255',
             'appointment_time' => 'required|date|after:now',
             'description' => 'nullable|string|max:1000',
+
         ];
     }
 }

@@ -17,6 +17,7 @@ class StoreAppointmentRequest extends FormRequest
             'title' => 'required|string|max:255',
             'appointment_time' => 'required|date|after:now',
             'description' => 'nullable|string',
+            'status' => 'nullable|in:pending,confirmed,cancelled',
         ];
     }
 }

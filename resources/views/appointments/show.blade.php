@@ -1,32 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto mt-10 bg-white p-6 shadow rounded">
-    <h1 class="text-2xl font-bold mb-4">تفاصيل الموعد</h1>
+    <div class="max-w-3xl mx-auto mt-10 bg-white p-8 shadow-lg rounded-lg">
 
-    <div class="mb-4">
-        <h2 class="font-semibold text-lg">{{ $appointment->title }}</h2>
-        <p class="text-sm">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('d M Y H:i') }}</p>
-        <p class="text-sm text-gray-600 mt-1">{{ $appointment->description ?? 'لا يوجد وصف للموعد' }}</p>
-    </div>
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">تفاصيل الموعد</h1>
 
-    <div class="flex gap-2 mt-6">
-        <a href="{{ route('appointments.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded">
-            العودة إلى المواعيد
-        </a>
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">العنوان</h3>
+            <p class="text-gray-700">{{ $appointment->title }}</p>
+        </div>
 
-        @if(\Carbon\Carbon::parse($appointment->appointment_time)->isFuture()) <!-- تحقق من أن الموعد ليس في الماضي -->
-            <a href="{{ route('appointments.edit', $appointment) }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                تعديل
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">وقت الموعد</h3>
+            <p class="text-gray-700">{{ $appointment->appointment_time->translatedFormat('l d F Y - h:i A') }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">الوصف</h3>
+            <p class="text-gray-700">{{ $appointment->description ?? '—' }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">الحالة</h3>
+            <p class="text-gray-700">
+                {{ $appointment->status->label() }}
+            </p>
+        </div>
+
+        <div class="mt-6 text-center">
+            <a href="{{ route('appointments.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-full shadow-md transition duration-200">
+                العودة إلى القائمة
             </a>
-            <form action="{{ route('appointments.destroy', $appointment) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
-                    حذف
-                </button>
-            </form>
-        @endif
+        </div>
+
     </div>
-</div>
 @endsection

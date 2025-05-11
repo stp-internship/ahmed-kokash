@@ -13,6 +13,7 @@ use App\Exports\AppointmentsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Enums\AppointmentStatus;
 
 
 class AppointmentController extends Controller
@@ -51,6 +52,7 @@ class AppointmentController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'appointment_time' => $request->appointment_time,
+            'status' => $request->status ?? AppointmentStatus::Pending,
             'user_id' => Auth::id(),
         ]);
 
@@ -72,6 +74,7 @@ class AppointmentController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'appointment_time' => $request->appointment_time,
+            'status' => $request->status, 
         ]);
 
         if (!$updated) {

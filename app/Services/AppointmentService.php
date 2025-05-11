@@ -12,23 +12,25 @@ class AppointmentService
     }
 
     public function updateAppointment(Appointment $appointment, array $data): bool
-    {
-        $data['appointment_time'] = \Carbon\Carbon::parse($data['appointment_time'])->format('Y-m-d H:i:00');
+{
+    $data['appointment_time'] = \Carbon\Carbon::parse($data['appointment_time'])->format('Y-m-d H:i:00');
 
-        $appointment->fill($data);
 
-        if (!$appointment->isDirty()) {
-            return false;
-        }
-
-        $appointment->save();
-
-        return true;
+    if (isset($data['status']) && is_object($data['status'])) {
+        $data['status'] = $data['status']->value;
     }
 
 
+    $appointment->fill($data);
 
+    if (!$appointment->isDirty()) {
+        return false;
+    }
 
+    $appointment->save();
+
+    return true;
+}
 
     public function deleteAppointment(Appointment $appointment): bool
     {
